@@ -9,7 +9,7 @@ const cardStyle = {
   width: '300px',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   transition: 'transform 0.3s',
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',  // Fundo branco com transparência
+  backgroundColor: 'rgba(255, 255, 255, 0.9)', // Fundo branco com transparência
 };
 
 const imageStyle = {
@@ -57,7 +57,6 @@ const Card = ({ title, content, image, publishDate, comments }) => {
       <div style={contentStyle}>
         <h2 style={titleStyle}>{title}</h2>
         <p style={textStyle}>{content}</p>
-        
         <p style={textStyle}>
           <small>{new Date(publishDate).toLocaleDateString()}</small>
         </p>

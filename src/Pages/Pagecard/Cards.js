@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../../Components/Card/Card';
+import { fetchPublish, fetchComments } from '../../Service/apiService';
 
 const containerStyle = {
   display: 'flex',
@@ -13,7 +14,7 @@ const pageStyle = {
   maxWidth: '1200px',
   margin: '0 auto',
   padding: '2em',
-  backgroundColor: 'rgba(255, 255, 255, 0.7)',  // Fundo branco com transparência
+  backgroundColor: 'rgba(255, 255, 255, 0.7)',
   borderRadius: '8px',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 };
@@ -29,14 +30,21 @@ const Cards = () => {
   const [cardData, setCardData] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/publish')
-      .then(response => response.json())
-      .then(data => setCardData(data))
-      .catch(error => console.error('Erro ao buscar os dados:', error));
+    const fetchData = async () => {
+      const publishData = await fetchPublish();
+      const publishDataWithComments = await Promise.all(publishData.map(async (publish) => {
+        const comments = await fetchComments(publish.id);
+        return { ...publish, comments };
+      }));
+      setCardData(publishDataWithComments);
+    };
+
+    fetchData();
   }, []);
 
   return (
     <div style={pageStyle}>
+      <h1 style={titleStyle}>Publicações</h1>
       <div style={containerStyle}>
         {cardData.map((card) => (
           <Card
@@ -45,7 +53,7 @@ const Cards = () => {
             content={card.content}
             image={card.image}
             publishDate={card.publishDate}
-            
+            comments={card.comments}
           />
         ))}
       </div>
